@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testplan status="{{ validation_status }}">
+   {% if not validation_status %}
+     {% include "gerador_roteiros/bad_xml_template.xml" %}
+   {% else %}
+     {% for scenario in scenario_list %}
+       {% include "gerador_roteiros/good_xml_template.xml" %}
+     {% endfor %}
+   {% endif %}
+</testplan>

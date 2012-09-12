@@ -1,0 +1,15 @@
+<testcase name="{{ scenario.name }}">
+  <requirements>{{ scenario.requirements }}</requirements>
+  <preconditions>{{ scenario.preconditions }}</preconditions>
+  <postconditions>{{ scenario.postconditions }}</postconditions>
+  <action_list>
+    {% for action in scenario.action_list %}
+      <action reference="{{ action.step_reference }}" actor="{{ action.actor }}">
+        {{ action.action_text }}
+        {% if action.notes %}
+          <notes>{{ action.notes }}</notes>
+        {% endif %}
+      </action>
+    {% endfor %}
+  </action_list>
+</testcase>

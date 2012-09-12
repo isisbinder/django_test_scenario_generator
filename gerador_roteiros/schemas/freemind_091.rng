@@ -1,0 +1,171 @@
+﻿<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+
+  <!-- Definição do elemento de comentário. -->
+  <define name="comment.node">
+    <element name="richcontent">
+      <attribute name="TYPE"><text/></attribute>
+      <element name="html">
+        <element name="head"><empty/></element>
+        <element name="body">
+          <!-- DEFINIR OS ELEMENTOS HTML PERMITIDOS -->
+          <oneOrMore>
+            <element name="p"><text/></element>
+          </oneOrMore>
+        </element>
+      </element>
+    </element>
+  </define>
+
+
+
+
+  <!-- Definição dos atributos que podem estar presentes em qualquer tipo de nó. -->
+  <define name="general.node.attributes">
+    <zeroOrMore>
+       <attribute>
+          <anyName/>
+       </attribute>
+    </zeroOrMore>
+  </define>
+
+
+
+
+  <!-- Definição de elementos que podem estar presentes em qualquer tipo de nó. -->
+  <define name="general.node.elements">
+      <optional>
+        <ref name="comment.node"/>
+      </optional>
+
+      <optional>
+         <element name="font">
+            <oneOrMore>
+               <attribute>
+                  <anyName/>
+               </attribute>
+            </oneOrMore>
+         </element>
+      </optional>
+  </define>
+
+
+
+
+  <!-- Definição dos ícones considerados comuns (sem significado especial). -->
+  <define name="all.common.icons">
+    <zeroOrMore>
+         <element name="icon">
+            <attribute name="BUILTIN">
+               <data type="token">
+                  <except>
+                     <value>info</value>
+                     <value>forward</value>
+                  </except>
+               </data>
+            </attribute>
+         </element>
+      </zeroOrMore>
+  </define>
+
+
+  <define name="all.icons">
+    <zeroOrMore>
+      <element name="icon">
+        <attribute name="BUILTIN">
+          <text/>
+        </attribute>
+      </element>
+    </zeroOrMore>
+  </define>
+
+
+  <define name="step.node">
+      <ref name="all.common.icons"/>
+      <zeroOrMore>
+        <ref name="flow.node"/>
+      </zeroOrMore>
+  </define>
+
+
+
+
+  <define name="infotext.node">
+      <element name="icon">
+        <attribute name="BUILTIN">
+          <value>info</value>
+        </attribute>
+      </element>
+
+      <oneOrMore>
+        <ref name="flow.node"/>
+      </oneOrMore>
+  </define>
+
+
+
+
+  <define name="linkstep.node">
+      <element name="icon">
+        <attribute name="BUILTIN">
+          <value>forward</value>
+        </attribute>
+      </element>
+  </define>
+
+
+
+
+  <define name="flow.node">
+    <element name="node">
+      <ref name="general.node.attributes"/>
+      <ref name="general.node.elements"/>
+
+      <choice>
+        <ref name="infotext.node"/>
+        <ref name="linkstep.node"/>
+        <ref name="step.node"/>
+      </choice>
+    </element>
+  </define>
+
+
+
+
+  <define name="uc.node">
+    <element name="node">
+      <ref name="general.node.attributes"/>
+      <ref name="general.node.elements"/>
+      <ref name="all.common.icons"/>
+      <oneOrMore>
+        <ref name="flow.node"/>
+      </oneOrMore>
+
+    </element>
+  </define>
+
+
+
+
+
+  <!-- Nó principal do mapa mental. Conterá todos os casos de uso do sistema. -->
+  <define name="start.node">
+    <element name="node">
+      <ref name="general.node.attributes"/>
+      <ref name="general.node.elements"/>
+      <ref name="all.common.icons"/>
+      <oneOrMore>
+        <ref name="uc.node"/>
+      </oneOrMore>
+    </element>
+  </define>
+
+
+  <!-- Início da gramática do XML. -->
+  <start>
+    <element name="map">
+      <attribute name="version"><text/></attribute>
+      <ref name="start.node"/>
+    </element>
+  </start>
+
+</grammar>
