@@ -6,7 +6,6 @@
   Contém exceções personalizadas para serem utilizadas pelo gerador de roteiros.
 
   Created: 27/08/2012
-  :copyright: (c) Ísis Binder, 2012 at COPEL
 
 """
 class RelaxNGValidationException(Exception):

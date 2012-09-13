@@ -7,7 +7,6 @@
     aplicação. Isso é necessário caso o XML seja alterado de uma versão para outra.
 
     Created: 20/08/2012
-    :copyright: (c) Ísis Binder, 2012 at COPEL
 
 """
 

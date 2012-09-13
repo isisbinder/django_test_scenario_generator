@@ -7,7 +7,6 @@
    dos dados do mapa mental.
 
    Created: 16/08/2012
-   :copyright: (c) 2012 by Ísis Binder at COPEL
 
 """
 

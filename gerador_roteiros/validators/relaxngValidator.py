@@ -5,8 +5,6 @@
 
    Contém a classe que realizará a validação utilizando o esquema RelaxNG.
 
-   :copyright: (c) 2012 by Ísis Binder at COPEL
-
 """
 import os
 import lxml

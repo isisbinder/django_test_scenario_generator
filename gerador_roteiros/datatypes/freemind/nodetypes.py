@@ -7,7 +7,6 @@
    Contém as classes que definem os tipos de nós suportados pelo Freemind.
 
    Created: 20/08/2012
-   :copyright: (c) Ísis Binder, 2012 at COPEL
 
 """
 

@@ -6,7 +6,6 @@
    Define os tipos de dados como um wrapper para a geração de roteiros.
 
    Created: 22/08/2012
-   :copyright: (c) Ísis Binder, 2012 at COPEL
 
 """
 import inspect

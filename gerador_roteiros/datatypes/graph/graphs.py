@@ -6,7 +6,6 @@
    Definição do tipo Grafo adaptado às necessidades da geração de roteiros.
 
    Created: 16/08/2012
-   :copyright: (c) Ísis Binder, 2012 at COPEL
 
 """
 import networkx
