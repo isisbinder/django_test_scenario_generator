@@ -39,30 +39,9 @@ class ScenarioGraph(networkx.MultiDiGraph):
       self.add_node(0, data = scenario_data)
 
 
-
   def leaves(self):
     """Retorna os nós folha (não tem arestas de saída) do grafo."""
     return [node for node in self.nodes() if not self.out_degree(node)]
-
-
-  def locate_link_target_index(self, mindmap_reference):
-    """Localiza no grafo o índice (ou label) do nó correspondente ao número de
-       sequência do mapa mental.
-
-       Argumentos
-       -----------
-
-       mindmap_reference é o número de sequência do passo dentro do mapa mental.
-
-    """
-    # Obtém os nós do tipo PASSO (verificação do tipo por presença de chave).
-    graph_step_nodes = [node_tuple for node_tuple in self.nodes(data = True) if 'step_reference' in node_tuple[1]['data'].keys()]
-
-    # Filtra a lista de nós PASSO para que seja localizado somente o nó cujo
-    # número de sequência corresponda à sequência passada como argumento.
-    reference_index = filter(lambda node_tuple: node_tuple[1]['data']['step_reference'] == mindmap_reference, graph_step_nodes)[0]
-
-    return reference_index[0]
 
 
   def get_node_info(self, node_index = 0):

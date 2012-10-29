@@ -74,21 +74,6 @@ class UndefinedReferenceException(Exception):
     super(UndefinedReferenceException, self).__init__(message)
 
 
-
-class CyclicGraphException(Exception):
-  """
-     gerador_roteiros.datatypes.exceptions.CyclicGraphException
-     ~~~~~~~~~~
-
-     Esta exceção deve ser lançada somente se existirem ciclos no grafo do
-     mapa mental.
-
-  """
-  def __init__(self, message):
-    super(CyclicGraphException, self).__init__(message)
-
-
-
 class InvalidSequenceException(Exception):
   """
      gerador_roteiros.datatypes.exceptions.InvalidSequenceException

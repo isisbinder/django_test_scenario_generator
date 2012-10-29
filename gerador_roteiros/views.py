@@ -70,7 +70,6 @@ class ViewGeradorRoteiro(View):
     return return_value, testsuite
 
 
-
   def _graph_builder(self, testsuite_obj):
     """Realiza a construção do grafo e executa validações necessárias.
 
@@ -80,36 +79,17 @@ class ViewGeradorRoteiro(View):
        testsuite_obj é o objeto gerador dos roteiros, responsável em parte pela
        construção dos grafos.
 
-
-       Exceções
-       ---------
-
-       CyclicGraphException - lançada se o grafo do mapa mental contém algum ciclo.
-
     """
-
-    return_value = None
-
-    try:
-      testsuite_obj.build_graphs()
-      testsuite_obj.run_graph_validations()
-
-    except CyclicGraphException, exception:
-      return_value = TestSuiteGenerator.build_bad_xml(exception.message)
-
-    return return_value
-
+    testsuite_obj.build_graphs()
 
 
   def post(self, request):
     """Realiza a conversão do mapa mental para um XML contendo todos os roteiros."""
 
     validation_error_message, testsuite = self._post_data_validator(request)
-    # Nenhuma mensagem de erro de validação foi gerada na primeira parte. Construir grafo.
-    if not validation_error_message:
-       validation_error_message = self._graph_builder(testsuite)
-
     if validation_error_message: # XML para documento mal-formado.
       return HttpResponse(validation_error_message, 'text/xml')
 
+    # Nenhuma mensagem de erro de validação foi gerada na primeira parte. Construir grafo.
+    self._graph_builder(testsuite)
     return HttpResponse(testsuite.build_good_xml(), 'text/xml')

@@ -62,7 +62,6 @@ class TestSuiteGenerator(object):
     raise UnsupportedVersionException('A versão utilizada para criar o mapa mental não é suportada pelo gerador.')
 
 
-
   def __init__(self, xml_content):
     """Inicializador que instancia um objeto de alguma classe "concreta"
        relacionada ao Freemind.
@@ -93,9 +92,6 @@ class TestSuiteGenerator(object):
       raise exception.__class__(exception.message)
 
 
-
-
-
   def _extract_graph_node_attributes(self, xml_node):
     """Retorna os dados que devem ser atribuídos a um nó no grafo.
 
@@ -120,8 +116,6 @@ class TestSuiteGenerator(object):
     return node_data
 
 
-
-
   def _depth_first_builder(self, xml_parent_node, target_graph, graph_parent_node):
     """Constrói o grafo correspondente ao cenário/caso de uso do mapa mental.
 
@@ -139,38 +133,12 @@ class TestSuiteGenerator(object):
 
     for child in children:
       graph_node_attrs = self._extract_graph_node_attributes(child)
-      next_node_number = len(target_graph.nodes())
-      target_graph.add_node(next_node_number, data = {key:value.strip() for key,value in graph_node_attrs.items()})
-      target_graph.add_edge(graph_parent_node, next_node_number)
-      self._depth_first_builder(child, target_graph, next_node_number)
-
-
-
-  def _substitute_link_nodes(self, scenario_graph):
-    """Realiza a substituição dos nós do tipo link por arestas ligando o nó
-       antecessor à sua referência.
-
-       Argumentos
-       -----------
-
-       scenario_graph é o grafo (networkx) correspondente ao cenário montado no
-       mapa mental.
-
-    """
-    # Obter lista de nós que representam links (tipo do nó verificado pela presença de chave).
-    link_nodes_list = [node_tuple for node_tuple in scenario_graph.nodes(data = True) if 'link_reference' in node_tuple[1]['data'].keys()]
-    for link in link_nodes_list:
-      # Cada nó no grafo possui somente um antecessor, por isso a construção
-      # direta referenciando o primeiro elemento da lista de antecessores do nó.
-      predecessor_node_index = scenario_graph.predecessors(link[0])[0]
-      referenced_node = link[1]['data']['link_reference']
-      target_node_index = scenario_graph.locate_link_target_index(referenced_node)
-      scenario_graph.add_edge(predecessor_node_index, target_node_index)
-
-    # Após todas as arestas terem sido criadas para o grafo atual,
-    # remover todos os nós links.
-    scenario_graph.remove_nodes_from([node[0] for node in link_nodes_list])
-
+      # Não adiciona o nó se for um link.
+      if 'link_reference' not in graph_node_attrs.keys():
+        next_node_number = len(target_graph.nodes())
+        target_graph.add_node(next_node_number, data = {key:value.strip() for key,value in graph_node_attrs.items()})
+        target_graph.add_edge(graph_parent_node, next_node_number)
+        self._depth_first_builder(child, target_graph, next_node_number)
 
 
   def build_graphs(self):
@@ -187,28 +155,6 @@ class TestSuiteGenerator(object):
       # profundidade.
       self._graph_list.append(ScenarioGraph(scenario_data.groupdict()))
       self._depth_first_builder(scenario, self._graph_list[-1], 0)
-
-      # Após construir o grafo, realiza a substituição dos nós links pelas
-      # respectivas arestas, ligando o nó antecessor do nó link ao nó por ele
-      # referenciado (texto).
-      self._substitute_link_nodes(self._graph_list[-1])
-
-
-
-  def run_graph_validations(self):
-    """Executa validações pertinentes aos grafos já montados.
-
-       Validações executadas:
-
-       1- Existência de ciclos no grafo (não é permitido).
-
-    """
-    # 1- Verifica se o grafo possui ciclos. Isso não é permitido.
-    # Exceções: CyclicGraphException
-    boolean_cycle_array = [bool(networkx.simple_cycles(graph)) for graph in self._graph_list]
-    if any(boolean_cycle_array):
-      raise CyclicGraphException("Foram detectados ciclos/loops no mapa mental.")
-
 
 
   def _build_context_data(self, graph, action_path):
@@ -246,8 +192,6 @@ class TestSuiteGenerator(object):
     return full_scenario
 
 
-
-
   def build_good_xml(self):
     """Percorre o grafo já validado e constrói o XML dos casos de teste."""
     scenario_list = []
@@ -271,8 +215,6 @@ class TestSuiteGenerator(object):
     template = get_template('gerador_roteiros/generic_template.xml')
     context = Context({'validation_status': True, 'scenario_list': scenario_list})
     return template.render(context)
-
-
 
 
   def validate(self):
